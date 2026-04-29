@@ -1,0 +1,44 @@
+{
+  "name": "jianli-agent-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx lib/db/migrate.ts"
+  },
+  "dependencies": {
+    "best-effort-json-parser": "^1.4.0",
+    "better-sqlite3": "^11.10.0",
+    "drizzle-orm": "^0.36.4",
+    "nanoid": "^5.1.9",
+    "next": "16.2.4",
+    "openai": "^4.104.0",
+    "p-limit": "^6.2.0",
+    "p-queue": "^8.1.1",
+    "pdf-parse": "^1.1.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitest/ui": "^2.1.9",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "pdfkit": "^0.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5",
+    "vitest": "^2.1.9"
+  }
+}

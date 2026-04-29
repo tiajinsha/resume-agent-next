@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40">
+  
+  <g transform="translate(4,8)">
+    <rect x="0" y="0" width="24" height="4" rx="2" fill="currentColor"></rect>
+    <rect x="4" y="10" width="16" height="4" rx="2" fill="currentColor"></rect>
+    <rect x="8" y="20" width="8" height="4" rx="2" fill="currentColor"></rect>
+  </g>
+  
+  <text x="40" y="27" font-family="Geist, -apple-system, sans-serif" font-weight="600" font-size="22" letter-spacing="-0.02em" fill="currentColor">Sift</text>
+  <text x="90" y="27" font-family="Noto Sans SC, sans-serif" font-weight="500" font-size="18" letter-spacing="0.02em" fill="currentColor" opacity="0.55">思筛</text>
+</svg>

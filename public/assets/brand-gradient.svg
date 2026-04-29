@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <radialGradient id="glow" cx="30%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="oklch(0.66 0.15 275)" stop-opacity="0.5"></stop>
+      <stop offset="60%" stop-color="oklch(0.56 0.16 275)" stop-opacity="0.12"></stop>
+      <stop offset="100%" stop-color="oklch(0.56 0.16 275)" stop-opacity="0"></stop>
+    </radialGradient>
+    <radialGradient id="glow2" cx="75%" cy="60%" r="45%">
+      <stop offset="0%" stop-color="oklch(0.78 0.15 90)" stop-opacity="0.35"></stop>
+      <stop offset="100%" stop-color="oklch(0.78 0.15 90)" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="400" fill="oklch(0.99 0.003 80)"></rect>
+  <rect width="800" height="400" fill="url(#glow)"></rect>
+  <rect width="800" height="400" fill="url(#glow2)"></rect>
+  
+  <g fill="oklch(0.56 0.16 275)" opacity="0.6">
+    <circle cx="80" cy="60" r="1.5"></circle><circle cx="140" cy="120" r="1"></circle><circle cx="220" cy="80" r="2"></circle>
+    <circle cx="300" cy="160" r="1"></circle><circle cx="380" cy="100" r="1.5"></circle><circle cx="460" cy="200" r="1"></circle>
+    <circle cx="540" cy="140" r="2"></circle><circle cx="620" cy="80" r="1"></circle><circle cx="700" cy="180" r="1.5"></circle>
+    <circle cx="120" cy="240" r="1"></circle><circle cx="200" cy="300" r="1.5"></circle><circle cx="280" cy="260" r="1"></circle>
+    <circle cx="360" cy="320" r="2"></circle><circle cx="440" cy="280" r="1"></circle><circle cx="520" cy="340" r="1.5"></circle>
+    <circle cx="600" cy="300" r="1"></circle><circle cx="680" cy="260" r="2"></circle><circle cx="760" cy="320" r="1"></circle>
+    <circle cx="40" cy="180" r="1"></circle><circle cx="160" cy="340" r="1.5"></circle><circle cx="340" cy="40" r="1"></circle>
+  </g>
+</svg>

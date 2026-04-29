@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "antd": {
+      "command": "antd",
+      "args": ["mcp"]
+    }
+  },
+  "permissions": {
+    "allowedTools": [
+      "bash:npm",
+      "bash:git",
+      "bash:npx",
+      "bash:pnpm",
+      "read",
+      "write",
+      "edit",
+      "glob",
+      "grep"
+    ]
+  }
+}
