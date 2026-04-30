@@ -421,7 +421,6 @@ function StreamingSections({
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* 候选人基本信息 */}
         <Card style={{ padding: 20, display: 'flex', gap: 16, alignItems: 'flex-start', ...cardAnim(0) }}>
-          <Avatar name={headerBasic.name ?? '?'} size={60} />
           <div style={{ flex: 1, minWidth: 0 }}>
 
             {/* 姓名 + 年龄 + 状态 */}
@@ -494,6 +493,11 @@ function StreamingSections({
             )}
 
           </div>
+          <Avatar
+            name={headerBasic.name ?? '?'}
+            size={64}
+            src={c.photoPath ? `/api/candidates/${c.id}/photo` : null}
+          />
         </Card>
 
         {/* 教育背景 */}

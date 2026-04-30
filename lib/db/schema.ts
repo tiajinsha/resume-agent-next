@@ -86,9 +86,10 @@ export const candidates = sqliteTable('candidates', {
   matchResults: text('match_results', { mode: 'json' }).$type<MatchResult[]>(),
   userId:       text('user_id').references(() => users.id),
 
-  pdfPath:  text('pdf_path').notNull(),
-  pdfSize:  integer('pdf_size').notNull(),
-  pdfPages: integer('pdf_pages'),
+  pdfPath:   text('pdf_path').notNull(),
+  pdfSize:   integer('pdf_size').notNull(),
+  pdfPages:  integer('pdf_pages'),
+  photoPath: text('photo_path'),
 
   createdAt: integer('created_at', { mode: 'timestamp_ms' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).notNull(),

@@ -2,8 +2,9 @@
 import { sql, eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { candidates, users, jobDescriptions, type MatchResult } from '../db/schema';
-import { readPdf } from '../storage';
+import { readPdf, photoPathFor, writePhoto } from '../storage';
 import { parsePdf } from './pdf';
+import { extractLargestJpeg } from './photo';
 import { callDeepSeekStream } from './llm';
 import { callMatchAI } from '../matching/llm';
 import { evalProjects } from './project-eval';
@@ -63,10 +64,24 @@ export async function runExtraction(id: string): Promise<void> {
     }
 
     const flat = deriveFlat(parsed);
+
+    // Try to extract headshot photo from PDF (no-op if none found)
+    let photoPath: string | null = null;
+    try {
+      const jpeg = extractLargestJpeg(buf);
+      if (jpeg) {
+        photoPath = photoPathFor(id);
+        writePhoto(photoPath, jpeg);
+      }
+    } catch (e) {
+      console.warn(`[photo-extract:${id}]`, e);
+    }
+
     db.update(candidates).set({
       ...flat,
       extractedJson: parsed,
       pdfPages: numpages,
+      ...(photoPath !== null ? { photoPath } : {}),
       extractionStatus: 'parsed',
       extractionError: null,
       updatedAt: new Date(),

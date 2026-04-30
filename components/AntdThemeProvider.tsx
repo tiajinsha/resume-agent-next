@@ -25,18 +25,27 @@ export default function AntdThemeProvider({ children }: { children: React.ReactN
       theme={{
         algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
-          colorPrimary: '#7c5cbf',
-          colorLink: '#7c5cbf',
-          borderRadius: 8,
+          // Do NOT override colorBgContainer / colorBgLayout here —
+          // dark algorithm needs to generate them freely.
+          // antd defaults already match: light=>#ffffff / #f0f2f5, dark=>#1f1f1f / #141414
+          borderRadius: 6,
+          borderRadiusLG: 8,
+          fontSize: 14,
           fontFamily:
             "'Geist', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif",
         },
         components: {
-          Button: { borderRadius: 8 },
-          Input: { borderRadius: 8 },
-          Select: { borderRadius: 8 },
-          Card: { borderRadius: 12 },
-          Table: { borderRadius: 12 },
+          Layout: {
+            headerHeight: 64,
+          },
+          Menu: {
+            itemHeight: 42,
+          },
+          Button: { borderRadius: 6 },
+          Input: { borderRadius: 6 },
+          Select: { borderRadius: 6 },
+          Card: { borderRadius: 8 },
+          Table: { borderRadius: 8 },
           Drawer: { borderRadius: 0 },
         },
       }}

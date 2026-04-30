@@ -26,3 +26,26 @@ export function deletePdf(relPath: string): void {
   const abs = absolutePath(relPath);
   if (existsSync(abs)) unlinkSync(abs);
 }
+
+export function photoPathFor(id: string): string {
+  return `${UPLOADS_DIR}/${id}.photo.jpg`;
+}
+
+export function writePhoto(relPath: string, buffer: Buffer): void {
+  const abs = absolutePath(relPath);
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, buffer);
+}
+
+export function readPhoto(relPath: string): Buffer {
+  return readFileSync(absolutePath(relPath));
+}
+
+export function deletePhoto(relPath: string): void {
+  const abs = absolutePath(relPath);
+  if (existsSync(abs)) unlinkSync(abs);
+}
+
+export function photoExists(relPath: string): boolean {
+  return existsSync(absolutePath(relPath));
+}

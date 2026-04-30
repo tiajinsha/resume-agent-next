@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Select } from 'antd';
 import { Card, ScoreRing, Btn } from './ui';
 import type { JobDescription, MatchResult } from '@/lib/db/schema';
 
@@ -82,8 +83,8 @@ export default function JdMatchPanel({ candidateId, extractionStatus, initialMat
     }
   }
 
-  const SectionLabel = ({ children }: { children: React.ReactNode }) => (
-    <div style={{ fontSize: 11, color: 'var(--fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 500, marginBottom: 10 }}>{children}</div>
+  const SectionLabel = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ fontSize: 11, color: 'var(--fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 500, marginBottom: 10, ...style }}>{children}</div>
   );
 
   if (extractionStatus !== 'parsed') {
@@ -124,19 +125,16 @@ export default function JdMatchPanel({ candidateId, extractionStatus, initialMat
 
   return (
     <Card style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex' ,alignItems:'center',justifyContent:'space-between'}}>
-        <SectionLabel>JD 匹配</SectionLabel>
-
-        {/* JD 选择器 */}
-        <select
-          value={selectedJdId}
-          onChange={e => setSelectedJdId(e.target.value)}
-          style={{ width: '104', padding: '8px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-elevated)', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--fg)', outline: 'none', cursor: 'pointer' }}
-        >
-          {jdList.map(jd => (
-            <option key={jd.id} value={jd.id}>{jd.title}</option>
-          ))}
-        </select>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <SectionLabel style={{ margin: 0, whiteSpace: 'nowrap', flexShrink: 0 }}>JD 匹配</SectionLabel>
+        <Select
+          value={selectedJdId || undefined}
+          onChange={setSelectedJdId}
+          style={{ flex: 1, minWidth: 0 }}
+          size="small"
+          options={jdList.map(jd => ({ label: jd.title, value: jd.id }))}
+          placeholder="选择岗位 JD"
+        />
       </div>
 
       {matching && (

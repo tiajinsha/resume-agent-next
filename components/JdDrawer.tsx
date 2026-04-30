@@ -24,7 +24,7 @@ export default function JdDrawer({ open, onClose, candidateId, extractionStatus,
       mask={false}
       title="JD 匹配"
       closeIcon={<CloseOutlined />}
-      rootStyle={{ top: 44, bottom: 0, height: 'auto' }}
+      rootStyle={{ top: 0, bottom: 0, height: 'auto' }}
       styles={{ body: { padding: 16, overflow: 'auto' } }}
     >
       <JdMatchPanel

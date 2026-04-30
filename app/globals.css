@@ -42,16 +42,16 @@
   --neutral-900: oklch(0.17 0.01 260);
   --neutral-950: oklch(0.12 0.008 260);
 
-  /* ---- Accent: 紫玉 Purple Jade ---- */
-  --accent-50:  oklch(0.97 0.02 275);
-  --accent-100: oklch(0.93 0.04 275);
-  --accent-200: oklch(0.86 0.08 275);
-  --accent-300: oklch(0.76 0.12 275);
-  --accent-400: oklch(0.66 0.15 275);
-  --accent-500: oklch(0.56 0.16 275);  /* primary */
-  --accent-600: oklch(0.48 0.15 275);
-  --accent-700: oklch(0.4 0.13 275);
-  --accent-800: oklch(0.32 0.1 275);
+  /* ---- Accent: antd default blue ---- */
+  --accent-50:  #e6f4ff;
+  --accent-100: #bae0ff;
+  --accent-200: #91caff;
+  --accent-300: #69b1ff;
+  --accent-400: #4096ff;
+  --accent-500: #1677ff;  /* primary */
+  --accent-600: #0958d9;
+  --accent-700: #003eb3;
+  --accent-800: #002c8c;
 
   /* ---- Semantic palette ---- */
   --success-100: oklch(0.95 0.04 150);
@@ -107,7 +107,7 @@
   --shadow-1: 0 0 0 1px oklch(0.17 0.01 260 / 0.04), 0 1px 2px oklch(0.17 0.01 260 / 0.04);
   --shadow-2: 0 0 0 1px oklch(0.17 0.01 260 / 0.05), 0 6px 12px -2px oklch(0.17 0.01 260 / 0.08), 0 24px 40px -12px oklch(0.17 0.01 260 / 0.08);
   --shadow-3: 0 0 0 1px oklch(0.17 0.01 260 / 0.06), 0 12px 24px -4px oklch(0.17 0.01 260 / 0.1), 0 48px 80px -20px oklch(0.17 0.01 260 / 0.16);
-  --shadow-focus: 0 0 0 3px oklch(0.56 0.16 275 / 0.24);
+  --shadow-focus: 0 0 0 3px rgba(22, 119, 255, 0.2);
 
   /* ---- Motion ---- */
   --ease-sift: cubic-bezier(0.2, 0, 0, 1);
@@ -127,19 +127,19 @@
      Semantic aliases — theme-aware
      Components should reference these, not the palette directly.
      ============================================================ */
-  --bg: var(--neutral-25);
-  --bg-elevated: var(--neutral-0);
-  --bg-sunken: var(--neutral-100);
-  --bg-hover: var(--neutral-100);
-  --bg-active: var(--neutral-200);
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #f0f2f5;
+  --bg-hover: #f5f5f5;
+  --bg-active: #ebebeb;
 
   --fg: var(--neutral-900);
   --fg-muted: var(--neutral-600);
   --fg-subtle: var(--neutral-500);
   --fg-on-accent: var(--neutral-0);
 
-  --border: oklch(0.92 0.005 260);
-  --border-strong: var(--neutral-300);
+  --border: #f0f0f0;
+  --border-strong: #d9d9d9;
   --border-accent: var(--accent-300);
 
   --accent: var(--accent-500);
@@ -150,30 +150,33 @@
   --overlay: oklch(0.2 0.02 260 / 0.48);
 }
 
-/* ---- Dark theme ---- */
+/* ---- Dark theme — aligned with antd dark algorithm ---- */
 [data-theme="dark"] {
-  --bg: var(--neutral-900);
-  --bg-elevated: var(--neutral-800);
-  --bg-sunken: var(--neutral-950);
-  --bg-hover: oklch(0.22 0.01 260);
-  --bg-active: var(--neutral-700);
+  /* Match antd dark: colorBgContainer=#1f1f1f, colorBgElevated=#262626, colorBgLayout=#141414 */
+  --bg: #1f1f1f;
+  --bg-elevated: #262626;
+  --bg-sunken: #141414;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(255, 255, 255, 0.1);
 
-  --fg: oklch(0.96 0.005 80);
-  --fg-muted: var(--neutral-400);
-  --fg-subtle: var(--neutral-500);
+  /* Match antd dark text: colorText=rgba(255,255,255,0.85) */
+  --fg: rgba(255, 255, 255, 0.85);
+  --fg-muted: rgba(255, 255, 255, 0.65);
+  --fg-subtle: rgba(255, 255, 255, 0.45);
 
-  --border: oklch(0.25 0.008 260);
-  --border-strong: var(--neutral-700);
+  /* Match antd dark border: colorBorder=#424242, colorBorderSecondary=#303030 */
+  --border: #303030;
+  --border-strong: #424242;
 
   --accent: var(--accent-400);
   --accent-hover: var(--accent-300);
-  --accent-bg-subtle: oklch(0.3 0.08 275 / 0.24);
+  --accent-bg-subtle: rgba(22, 119, 255, 0.15);
 
-  --shadow-1: 0 0 0 1px oklch(1 0 0 / 0.04), 0 1px 2px oklch(0 0 0 / 0.3);
-  --shadow-2: 0 0 0 1px oklch(1 0 0 / 0.05), 0 6px 12px -2px oklch(0 0 0 / 0.4), 0 24px 40px -12px oklch(0 0 0 / 0.4);
-  --shadow-3: 0 0 0 1px oklch(1 0 0 / 0.06), 0 12px 24px -4px oklch(0 0 0 / 0.5), 0 48px 80px -20px oklch(0 0 0 / 0.5);
+  --shadow-1: 0 0 0 1px rgba(255,255,255,0.04), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-2: 0 0 0 1px rgba(255,255,255,0.05), 0 6px 12px -2px rgba(0,0,0,0.4), 0 24px 40px -12px rgba(0,0,0,0.4);
+  --shadow-3: 0 0 0 1px rgba(255,255,255,0.06), 0 12px 24px -4px rgba(0,0,0,0.5), 0 48px 80px -20px rgba(0,0,0,0.5);
 
-  --overlay: oklch(0.1 0.01 260 / 0.64);
+  --overlay: rgba(0, 0, 0, 0.64);
 }
 
 /* ============================================================
@@ -275,7 +278,7 @@ body {
 }
 
 .app-shell {
-  min-height: calc(100vh - 44px);
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }

@@ -132,9 +132,18 @@ type StatusPillProps = { status: '待筛选' | '初筛通过' | '面试中' | '�
 export const StatusPill = ({ status }: StatusPillProps) => <Badge tone={STATUSES[status] || 'neutral'} dot>{status}</Badge>;
 
 // ---------- Avatar ----------
-type AvatarProps = { name?: string | null; size?: number };
-export const Avatar = ({ name, size = 32 }: AvatarProps) => {
+type AvatarProps = { name?: string | null; size?: number; src?: string | null };
+export const Avatar = ({ name, size = 32, src }: AvatarProps) => {
   const initial = (name || '?').charAt(0);
+  if (src) {
+    return (
+      <AntAvatar
+        size={size}
+        src={src}
+        style={{ flexShrink: 0, border: '1px solid var(--border)' }}
+      />
+    );
+  }
   return (
     <AntAvatar
       size={size}
@@ -218,10 +227,13 @@ export const ScoreRing = ({ score = 0, size = 72, label }: ScoreRingProps) => {
 
 // ---------- Theme hook ----------
 export const useTheme = (): [string, (t: string) => void] => {
-  const [theme, setTheme] = useState<string>(() => {
-    if (typeof document === 'undefined') return 'light';
-    return document.documentElement.dataset.theme || 'light';
-  });
+  const [theme, setTheme] = useState<string>('light'); // SSR-safe default
+  useEffect(() => {
+    // Sync with persisted theme after hydration
+    const stored = document.documentElement.dataset.theme || 'light';
+    if (stored !== 'light') setTheme(stored);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem('sift-theme', theme); } catch { /* ignore */ }

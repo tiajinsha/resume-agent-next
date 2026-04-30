@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import AppChrome from '@/components/AppChrome';
+import Script from 'next/script';
 import AntdRegistry from '@/components/AntdRegistry';
 import AntdThemeProvider from '@/components/AntdThemeProvider';
 import './globals.css';
@@ -21,14 +21,12 @@ const THEME_INIT = `
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
-      </head>
+      <head />
       <body>
+        <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         <AntdRegistry>
           <AntdThemeProvider>
-            <AppChrome />
-            <main className="app-shell">{children}</main>
+            {children}
           </AntdThemeProvider>
         </AntdRegistry>
       </body>

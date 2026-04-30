@@ -767,10 +767,10 @@ const TOC = [
 
 export default function DesignSystem() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 0, background: 'var(--bg)', minHeight: 'calc(100vh - 44px)' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 0, background: 'var(--bg)', minHeight: '100vh' }}>
       <aside style={{
-        position: 'sticky', top: 44, alignSelf: 'start',
-        height: 'calc(100vh - 44px)', overflow: 'auto',
+        position: 'sticky', top: 0, alignSelf: 'start',
+        height: '100vh', overflow: 'auto',
         borderRight: '1px solid var(--border)',
         padding: '24px 16px',
         display: 'flex', flexDirection: 'column', gap: 14,

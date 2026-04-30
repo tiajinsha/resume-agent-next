@@ -65,7 +65,7 @@ export default function LoginClient({ initialMode, isDev }: { initialMode: Mode;
       <div style={{
         width: 380, background: 'var(--bg)', borderRadius: 16,
         border: '1px solid var(--border)', padding: '36px 32px',
-        boxShadow: 'var(--shadow-card)',
+        boxShadow: 'var(--shadow-2)',
         display: 'flex', flexDirection: 'column', gap: 24,
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>

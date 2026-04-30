@@ -187,82 +187,85 @@ export default function DashboardClient({ initial, user }: { initial: Candidate[
             <KpiCard label="已录用" value={kpi.hired} sub="完成录用" />
           </div>
 
-          {/* Status filter + view toggle */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-            <Segmented
-              options={statusSegmentedOptions}
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v as string)}
-            />
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
-              <Button
-                icon={<SortAscendingOutlined />}
-                onClick={() => setSort(sort === 'recent' ? 'oldest' : sort === 'oldest' ? 'name' : 'recent')}
-              >
-                {sort === 'recent' ? '最近解析' : sort === 'oldest' ? '最早解析' : '姓名 A→Z'}
-              </Button>
+          {/* Filter + Table card */}
+          <Card>
+            {/* Status filter + view toggle */}
+            <div style={{ padding: '12px 16px', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
               <Segmented
-                options={[
-                  { value: 'table', icon: <I.List size={16} /> },
-                  { value: 'card', icon: <I.Grid size={16} /> },
-                ]}
-                value={view}
-                onChange={(v) => setView(v as 'table' | 'card')}
+                options={statusSegmentedOptions}
+                value={statusFilter}
+                onChange={(v) => setStatusFilter(v as string)}
+              />
+              <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+                <Button
+                  icon={<SortAscendingOutlined />}
+                  onClick={() => setSort(sort === 'recent' ? 'oldest' : sort === 'oldest' ? 'name' : 'recent')}
+                >
+                  {sort === 'recent' ? '最近解析' : sort === 'oldest' ? '最早解析' : '姓名 A→Z'}
+                </Button>
+                <Segmented
+                  options={[
+                    { value: 'table', icon: <I.List size={16} /> },
+                    { value: 'card', icon: <I.Grid size={16} /> },
+                  ]}
+                  value={view}
+                  onChange={(v) => setView(v as 'table' | 'card')}
+                />
+              </div>
+            </div>
+
+            {/* Role category filter */}
+            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)', overflowX: 'auto' }}>
+              <Segmented
+                options={roleSegmentedOptions}
+                value={roleCategoryFilter}
+                onChange={(v) => setRoleCategoryFilter(v as string)}
               />
             </div>
-          </div>
 
-          {/* Role category filter */}
-          <div style={{ marginBottom: 16, overflowX: 'auto' }}>
-            <Segmented
-              options={roleSegmentedOptions}
-              value={roleCategoryFilter}
-              onChange={(v) => setRoleCategoryFilter(v as string)}
-            />
-          </div>
-
-          {view === 'table' ? (
-            <Table
-              dataSource={filtered}
-              columns={columns}
-              rowKey="id"
-              pagination={false}
-              onRow={(c) => ({ onClick: () => router.push(`/candidates/${c.id}`), style: { cursor: 'pointer' } })}
-              locale={{ emptyText: (
-                <div style={{ padding: 40, textAlign: 'center', color: 'var(--fg-subtle)' }}>
-                  还没有候选人。前往<Link href="/upload" style={{ color: 'var(--accent)', textDecoration: 'none', margin: '0 4px' }}>上传</Link>开始。
-                </div>
-              )}}
-            />
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-              {filtered.map((c) => (
-                <Link key={c.id} href={`/candidates/${c.id}`} style={{ textDecoration: 'none' }}>
-                  <Card style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12, cursor: 'pointer' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                      <Avatar name={c.name ?? '?'} size={40} />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--fg)' }}>{c.name ?? '(未提取)'}</div>
-                        <div style={{ fontSize: 12, color: 'var(--fg-subtle)', marginTop: 2 }}>{c.role ?? '—'}</div>
+            {view === 'table' ? (
+              <Table
+                dataSource={filtered}
+                columns={columns}
+                rowKey="id"
+                pagination={false}
+                onRow={(c) => ({ onClick: () => router.push(`/candidates/${c.id}`), style: { cursor: 'pointer' } })}
+                locale={{ emptyText: (
+                  <div style={{ padding: 40, textAlign: 'center', color: 'var(--fg-subtle)' }}>
+                    还没有候选人。前往<Link href="/upload" style={{ color: 'var(--accent)', textDecoration: 'none', margin: '0 4px' }}>上传</Link>开始。
+                  </div>
+                )}}
+              />
+            ) : (
+              <div style={{ padding: 16, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+                {filtered.map((c) => (
+                  <Link key={c.id} href={`/candidates/${c.id}`} style={{ textDecoration: 'none' }}>
+                    <Card style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12, cursor: 'pointer' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                        <Avatar name={c.name ?? '?'} size={40} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--fg)' }}>{c.name ?? '(未提取)'}</div>
+                          <div style={{ fontSize: 12, color: 'var(--fg-subtle)', marginTop: 2 }}>{c.role ?? '—'}</div>
+                        </div>
+                        <ScoreRing score={(c.matchResults ?? []).reduce((m, r) => Math.max(m, r.overall), 0)} size={40} />
                       </div>
-                      <ScoreRing score={(c.matchResults ?? []).reduce((m, r) => Math.max(m, r.overall), 0)} size={40} />
-                    </div>
-                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                      {(c.skills ?? []).slice(0, 4).map((s) => <SkillTag key={s}>{s}</SkillTag>)}
-                    </div>
-                    <div style={{ paddingTop: 10, borderTop: '1px dashed var(--border)', display: 'flex', justifyContent: 'space-between' }}>
-                      {c.extractionStatus === 'parsed' ? <StatusPill status={c.status} /> : <span style={{ fontSize: 12, color: 'var(--fg-subtle)' }}>{c.extractionStatus === 'extracting' ? 'AI 解析中' : '等待解析'}</span>}
-                    </div>
-                  </Card>
-                </Link>
-              ))}
-              {filtered.length === 0 && (
-                <div style={{ gridColumn: '1/-1', padding: 60, textAlign: 'center', color: 'var(--fg-subtle)' }}>
-                  还没有候选人。前往<Link href="/upload" style={{ color: 'var(--accent)', textDecoration: 'none', margin: '0 4px' }}>上传</Link>开始。
-                </div>
-              )}
-            </div>
-          )}
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                        {(c.skills ?? []).slice(0, 4).map((s) => <SkillTag key={s}>{s}</SkillTag>)}
+                      </div>
+                      <div style={{ paddingTop: 10, borderTop: '1px dashed var(--border)', display: 'flex', justifyContent: 'space-between' }}>
+                        {c.extractionStatus === 'parsed' ? <StatusPill status={c.status} /> : <span style={{ fontSize: 12, color: 'var(--fg-subtle)' }}>{c.extractionStatus === 'extracting' ? 'AI 解析中' : '等待解析'}</span>}
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+                {filtered.length === 0 && (
+                  <div style={{ gridColumn: '1/-1', padding: 60, textAlign: 'center', color: 'var(--fg-subtle)' }}>
+                    还没有候选人。前往<Link href="/upload" style={{ color: 'var(--accent)', textDecoration: 'none', margin: '0 4px' }}>上传</Link>开始。
+                  </div>
+                )}
+              </div>
+            )}
+          </Card>
       </div>
     </PageLayout>
   );
