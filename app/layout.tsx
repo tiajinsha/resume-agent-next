@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import AppChrome from '@/components/AppChrome';
+import AntdRegistry from '@/components/AntdRegistry';
+import AntdThemeProvider from '@/components/AntdThemeProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,8 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
       <body>
-        <AppChrome />
-        <main className="app-shell">{children}</main>
+        <AntdRegistry>
+          <AntdThemeProvider>
+            <AppChrome />
+            <main className="app-shell">{children}</main>
+          </AntdThemeProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

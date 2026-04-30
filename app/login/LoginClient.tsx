@@ -1,38 +1,25 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Form, Input, Button, Tabs, Alert } from 'antd';
 import { SiftLogo } from '@/components/ui';
 
 type Mode = 'login' | 'register';
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 12px',
-  borderRadius: 8, border: '1px solid var(--border)',
-  background: 'var(--bg-elevated)', fontFamily: 'var(--font-sans)',
-  fontSize: 14, color: 'var(--fg)', outline: 'none', boxSizing: 'border-box',
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 12, fontWeight: 500, color: 'var(--fg-muted)', marginBottom: 5, display: 'block',
-};
-
 export default function LoginClient({ initialMode, isDev }: { initialMode: Mode; isDev?: boolean }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>(initialMode);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [form] = Form.useForm();
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submit(values: { username: string; password: string; displayName?: string }) {
     setLoading(true);
     setError(null);
     try {
       const url = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
-      const body: Record<string, string> = { username, password };
-      if (mode === 'register' && displayName) body.displayName = displayName;
+      const body: Record<string, string> = { username: values.username, password: values.password };
+      if (mode === 'register' && values.displayName) body.displayName = values.displayName;
 
       const r = await fetch(url, {
         method: 'POST',
@@ -61,6 +48,15 @@ export default function LoginClient({ initialMode, isDev }: { initialMode: Mode;
     }
   }
 
+  function fillDemo() {
+    form.setFieldsValue({ username: 'demo', password: 'demo123' });
+  }
+
+  const tabItems = [
+    { key: 'login', label: '登录' },
+    { key: 'register', label: '注册' },
+  ];
+
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -79,10 +75,17 @@ export default function LoginClient({ initialMode, isDev }: { initialMode: Mode;
           </div>
         </div>
 
+        <Tabs
+          centered
+          items={tabItems}
+          activeKey={mode}
+          onChange={(k) => { setMode(k as Mode); setError(null); form.resetFields(); }}
+        />
+
         {isDev && mode === 'login' && (
           <button
             type="button"
-            onClick={() => { setUsername('demo'); setPassword('demo123'); }}
+            onClick={fillDemo}
             style={{
               width: '100%', padding: '8px', borderRadius: 8,
               border: '1px dashed var(--accent-300)',
@@ -96,56 +99,35 @@ export default function LoginClient({ initialMode, isDev }: { initialMode: Mode;
           </button>
         )}
 
-        <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <Form form={form} layout="vertical" onFinish={submit} requiredMark={false}>
           {mode === 'register' && (
-            <div>
-              <label style={labelStyle}>显示名称（选填）</label>
-              <input
-                style={inputStyle} type="text" placeholder="如：张三" value={displayName}
-                onChange={e => setDisplayName(e.target.value)} autoComplete="name"
-                onFocus={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.boxShadow = 'var(--shadow-focus)'; }}
-                onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-              />
-            </div>
+            <Form.Item label="显示名称（选填）" name="displayName">
+              <Input placeholder="如：张三" autoComplete="name" />
+            </Form.Item>
           )}
-          <div>
-            <label style={labelStyle}>用户名</label>
-            <input
-              style={inputStyle} type="text" placeholder="username" value={username}
-              onChange={e => setUsername(e.target.value)} required autoComplete="username"
-              onFocus={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.boxShadow = 'var(--shadow-focus)'; }}
-              onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-            />
-          </div>
-          <div>
-            <label style={labelStyle}>密码{mode === 'register' ? '（至少 6 位）' : ''}</label>
-            <input
-              style={inputStyle} type="password" placeholder="••••••" value={password}
-              onChange={e => setPassword(e.target.value)} required autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              onFocus={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.boxShadow = 'var(--shadow-focus)'; }}
-              onBlur={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-            />
-          </div>
+          <Form.Item label="用户名" name="username" rules={[{ required: true, message: '请输入用户名' }]}>
+            <Input placeholder="username" autoComplete="username" />
+          </Form.Item>
+          <Form.Item
+            label={`密码${mode === 'register' ? '（至少 6 位）' : ''}`}
+            name="password"
+            rules={[{ required: true, message: '请输入密码' }]}
+          >
+            <Input.Password placeholder="••••••" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} />
+          </Form.Item>
 
           {error && (
-            <div style={{ fontSize: 12, color: 'var(--danger-700)', background: 'var(--danger-50, #fef2f2)', padding: '8px 12px', borderRadius: 6, border: '1px solid var(--danger-200, #fecaca)' }}>
-              {error}
-            </div>
+            <Form.Item>
+              <Alert type="error" message={error} showIcon />
+            </Form.Item>
           )}
 
-          <button
-            type="submit" disabled={loading}
-            style={{
-              width: '100%', padding: '10px', borderRadius: 8, border: 'none',
-              background: loading ? 'var(--accent-300)' : 'var(--accent)',
-              color: 'var(--accent-fg)', fontFamily: 'var(--font-sans)',
-              fontSize: 14, fontWeight: 600, cursor: loading ? 'default' : 'pointer',
-              transition: 'background var(--dur-fast)',
-            }}
-          >
-            {loading ? '处理中…' : mode === 'login' ? '登录' : '创建账号并登录'}
-          </button>
-        </form>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} block>
+              {loading ? '处理中…' : mode === 'login' ? '登录' : '创建账号并登录'}
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Sidebar, Btn, Avatar, StatusPill, Card, SkillTag, SchoolTierBadge, ThemeToggle } from './ui';
+import { Btn, Avatar, StatusPill, Card, SkillTag, SchoolTierBadge } from './ui';
+import PageLayout from './PageLayout';
 import JdMatchPanel from './JdMatchPanel';
 import { I } from './icons';
 import { useCandidateStream } from '@/hooks/useCandidateStream';
@@ -57,58 +58,50 @@ export default function CandidateDetailClient({ initial, user }: { initial: Cand
   const headerSummary = streaming ? streaming.summary : c.extractedJson?.summary;
 
   return (
-    <>
-      <div style={{ display: 'flex', height: 'calc(100vh - 44px)', background: 'var(--bg-sunken)' }}>
-        <Sidebar active="dashboard" user={user} />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          {/* Top bar */}
-          <div style={{ height: 60, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: 12, background: 'var(--bg)', flexShrink: 0 }}>
-            <Btn size="sm" icon={<I.ChevL />} variant="ghost" onClick={() => router.push('/dashboard')}>返回</Btn>
-            <div style={{ width: 1, height: 20, background: 'var(--border)' }} />
-            <span style={{ fontSize: 12, color: 'var(--fg-subtle)' }}>
-              候选人 · {isStreaming && !headerBasic.name ? '解析中…' : (headerBasic.name ?? c.id)}
-            </span>
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-              <Link href={`/candidates/${c.id}/edit`}><Btn size="sm" icon={<I.Edit />}>编辑</Btn></Link>
-              <Btn size="sm" variant="danger" onClick={onDelete}>删除</Btn>
-              <ThemeToggle />
-            </div>
-          </div>
-
-
-          {/* Content area */}
-          <StreamingScroller streaming={streaming} isStreaming={isStreaming}>
-            {error ? (
-              <Card style={{ padding: 32 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--danger-700)', marginBottom: 10 }}>解析失败</div>
-                <div style={{ fontSize: 13, color: 'var(--fg-muted)', lineHeight: 1.6 }}>{error}</div>
-                <div style={{ marginTop: 16 }}>
-                  <Btn variant="primary" onClick={onRetry}>重试</Btn>
-                </div>
-              </Card>
-            ) : (
-              <StreamingSections
-                c={c}
-                streaming={streaming}
-                isStreaming={isStreaming}
-                onUpdateStatus={updateStatus}
-                candidateId={c.id}
-                autoMatchFailed={autoMatchFailed}
-                headerBasic={headerBasic}
-                headerTargetRole={headerTargetRole}
-                headerRole={headerRole}
-                headerCompany={headerCompany}
-                headerSchool={headerSchool}
-                headerDegree={headerDegree}
-                headerSchoolTier={headerSchoolTier}
-                headerYears={headerYears}
-                headerSummary={headerSummary}
-              />
-            )}
-          </StreamingScroller>
+    <PageLayout
+      user={user}
+      activeKey="/dashboard"
+      title={isStreaming && !headerBasic.name ? '解析中…' : (headerBasic.name ?? c.id)}
+      subtitle="候选人详情"
+      headerRight={
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Btn size="sm" icon={<I.ChevL />} variant="ghost" onClick={() => router.push('/dashboard')}>返回</Btn>
+          <Link href={`/candidates/${c.id}/edit`}><Btn size="sm" icon={<I.Edit />}>编辑</Btn></Link>
+          <Btn size="sm" variant="danger" onClick={onDelete}>删除</Btn>
         </div>
-      </div>
-    </>
+      }
+      contentStyle={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+    >
+      <StreamingScroller streaming={streaming} isStreaming={isStreaming}>
+        {error ? (
+          <Card style={{ padding: 32 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--danger-700)', marginBottom: 10 }}>解析失败</div>
+            <div style={{ fontSize: 13, color: 'var(--fg-muted)', lineHeight: 1.6 }}>{error}</div>
+            <div style={{ marginTop: 16 }}>
+              <Btn variant="primary" onClick={onRetry}>重试</Btn>
+            </div>
+          </Card>
+        ) : (
+          <StreamingSections
+            c={c}
+            streaming={streaming}
+            isStreaming={isStreaming}
+            onUpdateStatus={updateStatus}
+            candidateId={c.id}
+            autoMatchFailed={autoMatchFailed}
+            headerBasic={headerBasic}
+            headerTargetRole={headerTargetRole}
+            headerRole={headerRole}
+            headerCompany={headerCompany}
+            headerSchool={headerSchool}
+            headerDegree={headerDegree}
+            headerSchoolTier={headerSchoolTier}
+            headerYears={headerYears}
+            headerSummary={headerSummary}
+          />
+        )}
+      </StreamingScroller>
+    </PageLayout>
   );
 }
 

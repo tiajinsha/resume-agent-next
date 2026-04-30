@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Sidebar, TopBar, Card, Avatar, SkillTag, ScoreRing } from './ui';
+import { Select } from 'antd';
+import { Card, Avatar, SkillTag, ScoreRing } from './ui';
+import PageLayout from './PageLayout';
 import type { Candidate, JobDescription, MatchResult, User } from '@/lib/db/schema';
 
 type Props = {
@@ -53,12 +55,13 @@ export default function CompareClient({ candidates, jds, user }: Props) {
   }
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 44px)', background: 'var(--bg-sunken)' }}>
-      <Sidebar active="compare" user={user} />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <TopBar title="对比分析" subtitle="选择 2–3 位候选人进行并排对比" />
-
-        <div style={{ flex: 1, overflow: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <PageLayout
+      user={user}
+      activeKey="/compare"
+      title="对比分析"
+      subtitle="选择 2–3 位候选人进行并排对比"
+    >
+      <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
           {/* 候选人选择区 */}
           <Card style={{ padding: 16 }}>
@@ -105,13 +108,12 @@ export default function CompareClient({ candidates, jds, user }: Props) {
               {jds.length > 0 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span style={{ fontSize: 12, color: 'var(--fg-subtle)', whiteSpace: 'nowrap' }}>对照岗位</span>
-                  <select
+                  <Select
                     value={filterJdId}
-                    onChange={e => setFilterJdId(e.target.value)}
-                    style={{ padding: '7px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-elevated)', fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--fg)', outline: 'none', cursor: 'pointer' }}
-                  >
-                    {jds.map(jd => <option key={jd.id} value={jd.id}>{jd.title}</option>)}
-                  </select>
+                    onChange={v => setFilterJdId(v)}
+                    options={jds.map(jd => ({ label: jd.title, value: jd.id }))}
+                    style={{ minWidth: 200 }}
+                  />
                 </div>
               )}
 
@@ -200,7 +202,6 @@ export default function CompareClient({ candidates, jds, user }: Props) {
             </Card>
           )}
         </div>
-      </div>
-    </div>
+      </PageLayout>
   );
 }

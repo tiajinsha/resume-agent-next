@@ -13,6 +13,9 @@
     "db:migrate": "tsx lib/db/migrate.ts"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^2.1.2",
+    "@ant-design/icons": "^6.2.2",
+    "antd": "^6.3.7",
     "best-effort-json-parser": "^1.4.0",
     "better-sqlite3": "^11.10.0",
     "drizzle-orm": "^0.36.4",

@@ -3,8 +3,10 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import pLimit from 'p-limit';
-import { Sidebar, TopBar, Btn, Badge, Card } from './ui';
-import { I } from './icons';
+import { Upload, Progress, Button, Tag } from 'antd';
+import { InboxOutlined, FileOutlined, EyeOutlined } from '@ant-design/icons';
+import { Card } from './ui';
+import PageLayout from './PageLayout';
 import { useJobPoll } from '@/hooks/useJobPoll';
 
 type UploadStatus = 'queued' | 'uploading' | 'uploaded' | 'extracting' | 'parsed' | 'error';
@@ -18,13 +20,13 @@ type UploadItem = {
   error?: string;
 };
 
-const STATUS_META: Record<UploadStatus, { label: string; tone: 'neutral' | 'info' | 'accent' | 'success' | 'danger' }> = {
-  queued:     { label: '排队中',    tone: 'neutral' },
-  uploading:  { label: '上传中',    tone: 'info' },
-  uploaded:   { label: '等待解析',  tone: 'neutral' },
-  extracting: { label: 'AI 解析中', tone: 'accent' },
-  parsed:     { label: '已完成',    tone: 'success' },
-  error:      { label: '解析失败',  tone: 'danger' },
+const STATUS_META: Record<UploadStatus, { label: string; color: string }> = {
+  queued:     { label: '排队中',    color: 'default' },
+  uploading:  { label: '上传中',    color: 'blue' },
+  uploaded:   { label: '等待解析',  color: 'default' },
+  extracting: { label: 'AI 解析中', color: 'purple' },
+  parsed:     { label: '已完成',    color: 'green' },
+  error:      { label: '解析失败',  color: 'red' },
 };
 
 const limiter = pLimit(5);
@@ -33,7 +35,6 @@ import type { User } from '@/lib/db/schema';
 
 export default function UploadClient({ user }: { user: User }) {
   const [items, setItems] = useState<UploadItem[]>([]);
-  const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const pollIds = useMemo(
@@ -153,23 +154,23 @@ export default function UploadClient({ user }: { user: User }) {
   );
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 44px)', background: 'var(--bg-sunken)' }}>
-      <Sidebar active="upload" counts={{ upload: items.length }} user={user} />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <TopBar title="上传与解析" subtitle="拖拽或点击上传简历,AI 自动解析提取结构化信息" />
-        <div
-          style={{
-            padding: '24px 32px',
-            flex: 1,
-            overflow: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 20,
-            maxWidth: 1080,
-            margin: '0 auto',
-            width: '100%',
-          }}
-        >
+    <PageLayout
+      user={user}
+      activeKey="/upload"
+      title="上传与解析"
+      subtitle="拖拽或点击上传简历，AI 自动解析提取结构化信息"
+    >
+      <div
+        style={{
+          padding: '24px 32px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+          maxWidth: 1080,
+          margin: '0 auto',
+          width: '100%',
+        }}
+      >
           {/* KPI strip */}
           {items.length > 0 && (
             <div style={{ display: 'flex', gap: 12 }}>
@@ -181,57 +182,45 @@ export default function UploadClient({ user }: { user: User }) {
           )}
 
           {/* Drop zone */}
-          <div
-            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => { e.preventDefault(); setDragging(false); onPick(e.dataTransfer.files); }}
-            style={{
-              border: '2px dashed ' + (dragging ? 'var(--accent-500)' : 'var(--border-strong)'),
-              background: dragging ? 'var(--accent-bg-subtle)' : 'var(--bg-elevated)',
-              borderRadius: 16,
-              padding: '40px 24px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 12,
-              transition: 'all var(--dur-base) var(--ease-sift)',
+          <Upload.Dragger
+            accept="application/pdf"
+            multiple
+            showUploadList={false}
+            customRequest={({ file, onSuccess }) => {
+              onPick((() => {
+                const dt = new DataTransfer();
+                dt.items.add(file as File);
+                return dt.files;
+              })());
+              onSuccess?.({});
             }}
+            style={{ borderRadius: 16 }}
           >
-            <div style={{
-              width: 48, height: 48, borderRadius: 12,
-              background: dragging ? 'var(--accent-500)' : 'var(--accent-bg-subtle)',
-              color: dragging ? 'white' : 'var(--accent-500)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <I.Upload size={24} />
+            <div style={{ padding: '20px 0' }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: 'var(--accent-bg-subtle)',
+                color: 'var(--accent-500)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 12px',
+              }}>
+                <InboxOutlined style={{ fontSize: 24 }} />
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 600, color: 'var(--fg)', letterSpacing: '-0.01em' }}>
+                拖拽简历到此处,或点击上传
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--fg-subtle)', marginTop: 8 }}>
+                支持批量 · 仅限 PDF · 单份最大 10MB · 最多 20 份
+              </div>
             </div>
-            <div style={{ fontSize: 18, fontWeight: 600, color: 'var(--fg)', letterSpacing: '-0.01em' }}>
-              {dragging ? '松开鼠标上传简历' : '拖拽简历到此处,或点击上传'}
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--fg-subtle)' }}>
-              支持批量 · 仅限 PDF · 单份最大 10MB · 最多 20 份
-            </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
-              <Btn variant="primary" icon={<I.Upload />} onClick={() => inputRef.current?.click()}>
-                选择文件
-              </Btn>
-              <input
-                ref={inputRef}
-                type="file"
-                accept="application/pdf"
-                multiple
-                hidden
-                onChange={(e) => { onPick(e.target.files); e.target.value = ''; }}
-              />
-            </div>
-          </div>
+          </Upload.Dragger>
 
           {items.length > 0 && (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--fg)' }}>上传队列</span>
                 {kpi.parsed > 0 && (
-                  <Btn size="sm" onClick={clearDone}>清空已完成</Btn>
+                  <Button size="small" onClick={clearDone}>清空已完成</Button>
                 )}
               </div>
 
@@ -253,7 +242,7 @@ export default function UploadClient({ user }: { user: User }) {
                       {/* File name + icon */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                         <div style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--accent-bg-subtle)', color: 'var(--accent-500)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <I.File size={18} />
+                          <FileOutlined style={{ fontSize: 18 }} />
                         </div>
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--fg)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -269,36 +258,28 @@ export default function UploadClient({ user }: { user: User }) {
                       {/* Progress */}
                       <div>
                         {(it.status === 'uploading' || it.status === 'extracting') ? (
-                          <div>
-                            <div style={{ height: 4, background: 'var(--bg-sunken)', borderRadius: 2, overflow: 'hidden' }}>
-                              <div style={{
-                                height: '100%',
-                                width: it.progress + '%',
-                                background: it.status === 'extracting' ? 'var(--accent-500)' : 'var(--info-500)',
-                                borderRadius: 2,
-                                transition: 'width 0.2s',
-                              }} />
-                            </div>
-                            <div style={{ fontSize: 10, color: 'var(--fg-subtle)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
-                              {it.progress}%
-                            </div>
-                          </div>
+                          <Progress
+                            percent={it.progress}
+                            size="small"
+                            showInfo={false}
+                            strokeColor={it.status === 'extracting' ? 'var(--accent-500)' : undefined}
+                          />
                         ) : null}
                       </div>
 
                       {/* Status */}
                       <div>
-                        <Badge tone={meta.tone} dot>{meta.label}</Badge>
+                        <Tag color={meta.color}>{meta.label}</Tag>
                       </div>
 
                       {/* Action */}
                       <div>
                         {it.status === 'error' && (
-                          <Btn size="sm" onClick={() => retry(it)}>重试</Btn>
+                          <Button size="small" onClick={() => retry(it)}>重试</Button>
                         )}
                         {it.status === 'parsed' && it.id && (
                           <Link href={`/candidates/${it.id}`} style={{ textDecoration: 'none' }}>
-                            <Btn size="sm" icon={<I.Eye />}>查看</Btn>
+                            <Button size="small" icon={<EyeOutlined />}>查看</Button>
                           </Link>
                         )}
                       </div>
@@ -308,8 +289,7 @@ export default function UploadClient({ user }: { user: User }) {
               </Card>
             </>
           )}
-        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
