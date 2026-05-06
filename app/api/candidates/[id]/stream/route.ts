@@ -50,6 +50,8 @@ export async function GET(req: Request, ctx: Ctx) {
       const sub = bus.subscribe(id, (event) => {
         if (event.type === 'chunk') {
           send('chunk', { text: event.text });
+        } else if (event.type === 'status') {
+          send('status', { section: event.section });
         } else if (event.type === 'done') {
           send('done', { candidate: event.candidate, autoMatchFailed: event.autoMatchFailed });
           closeAll();
@@ -75,10 +77,10 @@ export async function GET(req: Request, ctx: Ctx) {
 
   return new Response(stream, {
     headers: {
-      'Content-Type':      'text/event-stream; charset=utf-8',
-      'Cache-Control':     'no-cache, no-transform',
-      'Content-Encoding':  'identity',
-      'Connection':        'keep-alive',
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      'Content-Encoding': 'identity',
+      'Connection': 'keep-alive',
       'X-Accel-Buffering': 'no',
     },
   });

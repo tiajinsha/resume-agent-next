@@ -158,13 +158,14 @@ export const Avatar = ({ name, size = 32, src }: AvatarProps) => {
 type CardProps = {
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  bodyStyle?: React.CSSProperties;
   hover?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(({ children, style, hover, onClick, onMouseEnter, onMouseLeave, ...rest }, ref) => (
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(({ children, style, bodyStyle, hover, onClick, onMouseEnter, onMouseLeave, ...rest }, ref) => (
   <AntCard
     ref={ref}
-    styles={{ body: { padding: 0 } }}
+    styles={{ body: { padding: 0, ...bodyStyle } }}
     style={{
       border: hover ? '1px solid var(--accent-300)' : undefined,
       boxShadow: hover ? 'var(--shadow-2)' : undefined,

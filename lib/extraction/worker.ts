@@ -12,6 +12,7 @@ import { ExtractedResume } from '../validation';
 import { ExtractionError, toUserMessage } from '../errors';
 import { deriveFlat } from './derive';
 import * as bus from './event-bus';
+import { SECTION_KEYS } from './sections';
 
 export async function runExtraction(id: string): Promise<void> {
   const row = db.select().from(candidates).where(eq(candidates.id, id)).get();
@@ -28,10 +29,17 @@ export async function runExtraction(id: string): Promise<void> {
     const { text, numpages } = await parsePdf(buf);
     if (!text.trim()) throw new ExtractionError('pdf_empty');
 
+    const seenSections = new Set<string>();
     let buffer = '';
     for await (const chunk of callDeepSeekStream(text)) {
       buffer += chunk;
       bus.publish(id, { type: 'chunk', text: chunk });
+      for (const key of SECTION_KEYS) {
+        if (!seenSections.has(key) && buffer.includes(`"${key}":`)) {
+          seenSections.add(key);
+          bus.publish(id, { type: 'status', section: key });
+        }
+      }
     }
 
     if (!buffer.trim()) throw new ExtractionError('llm_empty');

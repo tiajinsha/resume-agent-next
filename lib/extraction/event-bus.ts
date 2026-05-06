@@ -3,9 +3,10 @@ import { EventEmitter } from 'node:events';
 import type { Candidate } from '../db/schema';
 
 export type StreamEvent =
-  | { type: 'chunk'; text: string }
-  | { type: 'done';  candidate: Candidate; autoMatchFailed?: boolean }
-  | { type: 'error'; message: string };
+  | { type: 'chunk';  text: string }
+  | { type: 'status'; section: string }
+  | { type: 'done';   candidate: Candidate; autoMatchFailed?: boolean }
+  | { type: 'error';  message: string };
 
 export type Listener = (event: StreamEvent) => void;
 

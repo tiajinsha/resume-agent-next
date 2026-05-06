@@ -306,6 +306,22 @@ body {
   100% { top: 112%; opacity: 0; }
 }
 
+@keyframes sift-content-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sift-settle {
+  0%   { opacity: 0.75; transform: scale(0.998); }
+  60%  { opacity: 1;    transform: scale(1); }
+  100% { opacity: 1;    transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* Remove default focus outline; we use shadow-focus on inputs/buttons */
 button, input, textarea, select { font: inherit; color: inherit; }
 a { color: inherit; }

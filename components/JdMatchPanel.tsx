@@ -13,6 +13,14 @@ type Props = {
   onMatchComplete?: () => void;
 };
 
+function SectionLabel({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <div style={{ fontSize: 11, color: 'var(--fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 500, marginBottom: 10, ...style }}>
+      {children}
+    </div>
+  );
+}
+
 function ScoreBar({ label, score, comment }: { label: string; score: number; comment: string }) {
   const color = score >= 80 ? 'var(--score-100)' : score >= 65 ? 'var(--score-80)' : score >= 50 ? 'var(--score-60)' : score >= 30 ? 'var(--score-40)' : 'var(--score-0)';
   return (
@@ -83,10 +91,6 @@ export default function JdMatchPanel({ candidateId, extractionStatus, initialMat
     }
   }
 
-  const SectionLabel = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
-    <div style={{ fontSize: 11, color: 'var(--fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 500, marginBottom: 10, ...style }}>{children}</div>
-  );
-
   if (extractionStatus !== 'parsed') {
     return (
       <Card style={{ padding: 20 }}>
@@ -125,7 +129,7 @@ export default function JdMatchPanel({ candidateId, extractionStatus, initialMat
 
   return (
     <Card style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8,marginBottom: 14 }}>
         <SectionLabel style={{ margin: 0, whiteSpace: 'nowrap', flexShrink: 0 }}>JD 匹配</SectionLabel>
         <Select
           value={selectedJdId || undefined}

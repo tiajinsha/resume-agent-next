@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Layout, Menu, Button, Dropdown, Avatar as AntAvatar, Tooltip } from 'antd';
+import { Layout, Menu, Button, Dropdown, Avatar as AntAvatar } from 'antd';
 import {
   UploadOutlined, TeamOutlined, BankOutlined, DiffOutlined,
-  LogoutOutlined, BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PlusOutlined,
+  LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import { SiftLogo, ThemeToggle } from './ui';
+import { SiftLogo } from './ui';
 import type { User } from '@/lib/db/schema';
 
 const { Sider, Header, Content } = Layout;
@@ -206,13 +206,6 @@ export default function PageLayout({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
             {headerRight}
-            <Button
-              type="text"
-              icon={<BellOutlined />}
-              style={{ width: 40, height: 40, padding: 0 }}
-              aria-label="通知"
-            />
-            <ThemeToggle />
           </div>
         </Header>
 
