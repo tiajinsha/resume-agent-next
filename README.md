@@ -11,8 +11,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg)](https://www.typescriptlang.org/)
 [![CI](https://github.com/tiajinsha/resume-agent-next/actions/workflows/ci.yml/badge.svg)](https://github.com/tiajinsha/resume-agent-next/actions/workflows/ci.yml)
 
-<img src="public/assets/brand-gradient.svg" alt="Sift 思筛" width="600" />
-
 </div>
 
 ## 📸 预览
