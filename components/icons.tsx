@@ -46,9 +46,11 @@ import {
 type IconProps = SVGProps<SVGSVGElement> & { size?: number };
 
 function wrap(AntIcon: React.ComponentType<{ style?: React.CSSProperties; className?: string }>) {
-  return ({ size = 20, style, ...rest }: IconProps) => (
+  const Wrapped = ({ size = 20, style, ...rest }: IconProps) => (
     <AntIcon style={{ fontSize: size, ...style }} {...(rest as any)} />
   );
+  Wrapped.displayName = `Icon(${AntIcon.displayName ?? AntIcon.name ?? 'Anonymous'})`;
+  return Wrapped;
 }
 
 export const I = {

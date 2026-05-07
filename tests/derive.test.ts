@@ -30,8 +30,8 @@ describe('deriveFlat', () => {
     const e: ExtractedResume = {
       ...base,
       educations: [
-        { school: '本科校', major: 'CS', degree: '本科', startDate: '2011.09', endDate: '2015.07' },
-        { school: '硕士校', major: 'CS', degree: '硕士', startDate: '2015.09', endDate: '2018.07' },
+        { school: '本科校', major: 'CS', degree: '本科', startDate: '2011.09', endDate: '2015.07', schoolTier: null },
+        { school: '硕士校', major: 'CS', degree: '硕士', startDate: '2015.09', endDate: '2018.07', schoolTier: null },
       ],
     };
     const flat = deriveFlat(e);
@@ -44,8 +44,8 @@ describe('deriveFlat', () => {
     const w: ExtractedResume = {
       ...base,
       works: [
-        { company: '前公司', role: 'A', startDate: '2018.01', endDate: '2020.06', highlights: [] },
-        { company: '现公司', role: 'B', startDate: '2020.07', endDate: '至今', highlights: [] },
+        { company: '前公司', role: 'A', startDate: '2018.01', endDate: '2020.06', description: null, highlights: [] },
+        { company: '现公司', role: 'B', startDate: '2020.07', endDate: '至今', description: null, highlights: [] },
       ],
     };
     const flat = deriveFlat(w);
@@ -76,43 +76,43 @@ describe('deriveFlat', () => {
 describe('computeYears (date format variants)', () => {
   it('accepts "2018.01" format', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: '2018.01', endDate: '2020.01', highlights: [] },
-      { company: 'y', role: null, startDate: '2020.07', endDate: '2023.07', highlights: [] },
+      { company: 'x', role: null, startDate: '2018.01', endDate: '2020.01', description: null, highlights: [] },
+      { company: 'y', role: null, startDate: '2020.07', endDate: '2023.07', description: null, highlights: [] },
     ]);
     expect(years).toBe(5);
   });
 
   it('accepts "2018/01" format', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: '2018/01', endDate: '2020/01', highlights: [] },
+      { company: 'x', role: null, startDate: '2018/01', endDate: '2020/01', description: null, highlights: [] },
     ]);
     expect(years).toBe(2);
   });
 
   it('accepts "2018-01" format', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: '2018-01', endDate: '2020-01', highlights: [] },
+      { company: 'x', role: null, startDate: '2018-01', endDate: '2020-01', description: null, highlights: [] },
     ]);
     expect(years).toBe(2);
   });
 
   it('accepts bare year "2018" as January', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: '2018', endDate: '2020', highlights: [] },
+      { company: 'x', role: null, startDate: '2018', endDate: '2020', description: null, highlights: [] },
     ]);
     expect(years).toBe(2);
   });
 
   it('treats 至今 as now', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: '2020.04', endDate: '至今', highlights: [] },
+      { company: 'x', role: null, startDate: '2020.04', endDate: '至今', description: null, highlights: [] },
     ], new Date('2026-04-24'));
     expect(years).toBe(6);
   });
 
   it('returns null when no parseable dates', () => {
     const years = computeYears([
-      { company: 'x', role: null, startDate: null, endDate: null, highlights: [] },
+      { company: 'x', role: null, startDate: null, endDate: null, description: null, highlights: [] },
     ]);
     expect(years).toBeNull();
   });
