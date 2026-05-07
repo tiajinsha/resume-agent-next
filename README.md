@@ -13,13 +13,21 @@
 
 <img src="public/assets/brand-gradient.svg" alt="Sift 思筛" width="600" />
 
-<!-- 静态截图区(待补)
-<img src="docs/screenshots/dashboard.png" alt="Dashboard" />
-<img src="docs/screenshots/compare.png" alt="Compare" />
-<img src="docs/screenshots/detail.png" alt="Candidate Detail" />
--->
-
 </div>
+
+## 📸 预览
+
+### 候选人列表 — KPI / 状态筛选 / 批量操作 / CSV 导出
+![Dashboard](docs/screenshots/dashboard.png)
+
+### 候选人详情 — AI 流式抽取(打字机效果)+ JD 匹配抽屉
+![Candidate Detail](docs/screenshots/detail.png)
+
+### 多人对比 — 自研 SVG 雷达图 + 维度评分 + 技能差异高亮
+![Compare](docs/screenshots/compare.png)
+
+### 岗位描述编辑 — 必备技能 / 加分项 / 三维度权重配置
+![JD Edit](docs/screenshots/jd.png)
 
 ---
 
