@@ -670,8 +670,9 @@ export default function DashboardClient({ initial, user }: { initial: Candidate[
                 onChange: (keys) => setSelectedRowKeys(keys as string[]),
               }}
               onRow={(c) => ({
-                onClick: () => router.push(`/candidates/${c.id}`),
-                style:   { cursor: 'pointer' },
+                onClick:      () => router.push(`/candidates/${c.id}`),
+                onMouseEnter: () => router.prefetch(`/candidates/${c.id}`),
+                style:        { cursor: 'pointer' },
               })}
               locale={{ emptyText: emptyContent }}
             />
@@ -701,7 +702,10 @@ export default function DashboardClient({ initial, user }: { initial: Candidate[
                         transition: 'transform var(--dur-base) ease, box-shadow var(--dur-base) ease, border var(--dur-base) ease',
                       }}
                       onClick={() => router.push(`/candidates/${c.id}`)}
-                      onMouseEnter={() => setHoveredCardId(c.id)}
+                      onMouseEnter={() => {
+                        setHoveredCardId(c.id);
+                        router.prefetch(`/candidates/${c.id}`);
+                      }}
                       onMouseLeave={() => setHoveredCardId(null)}
                     >
                       {/* Header row */}
