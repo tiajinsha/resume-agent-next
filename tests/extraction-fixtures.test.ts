@@ -5,7 +5,7 @@ import { deriveFlat } from '@/lib/extraction/derive';
 import { RESUME_SECTION_CLEAN } from './fixtures/resume-section-clean';
 import { RESUME_SECTION_EMBEDDED } from './fixtures/resume-section-embedded';
 
-describe('fixture: section-clean (田金沙 风格)', () => {
+describe('fixture: section-clean (工作经历表格 + 项目独立段)', () => {
   it('passes schema validation', () => {
     expect(() => ExtractedResume.parse(RESUME_SECTION_CLEAN)).not.toThrow();
   });
@@ -27,7 +27,7 @@ describe('fixture: section-clean (田金沙 风格)', () => {
     expect(flat.targetRole).toBe('前端开发工程师 / TypeScript 全栈开发');
     expect(flat.age).toBe(28);
     expect(flat.gradDate).toBe('2019/07');
-    expect(flat.company).toBe('开林企业管理');
+    expect(flat.company).toBe('示例科技 A');
     expect(flat.role).toBe('前端开发工程师');
     expect(flat.years).toBeGreaterThanOrEqual(5);
   });

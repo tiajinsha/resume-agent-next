@@ -45,3 +45,7 @@ data/
 *.db
 .env.local
 .env*.local
+
+# 个人简历样本(不属于此项目)
+简历.md
+*.resume.md
