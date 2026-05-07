@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# 但保留 example/template 文件以便贡献者参考
+!.env*.example
+!.env*.template
 
 # vercel
 .vercel

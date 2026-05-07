@@ -1,0 +1,50 @@
+# 依赖与构建产物 (Docker 内会重新 npm ci + build)
+node_modules
+.next
+out
+build
+coverage
+
+# Git / IDE / OS
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+# 本地数据(永远不该进镜像;由 volume 提供)
+data
+local.db
+*.db
+*.db-shm
+*.db-wal
+
+# 环境变量(secrets 通过 docker run -e 或 docker-compose env_file 注入)
+.env
+.env.local
+.env*.local
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+*.log
+
+# 测试 / 文档(运行时不需要)
+tests
+docs
+*.md
+!README.md
+
+# 部署相关(其他平台用,Docker 不需要)
+bootstrap-server.sh
+nginx-sift.conf
+
+# Docker 自身
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# TypeScript 缓存
+tsconfig.tsbuildinfo
+next-env.d.ts

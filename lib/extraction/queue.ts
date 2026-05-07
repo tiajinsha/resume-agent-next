@@ -32,4 +32,8 @@ export function enqueueExtraction(id: string): void {
   queue.add(() => runExtraction(id));
 }
 
-initOnce();
+// 跳过 Next.js 构建阶段的副作用初始化 — build 时会 prerender API routes
+// 触发模块求值,但 DB 此时可能未迁移(尤其 :memory: / Docker 首次启动)
+if (process.env.NEXT_PHASE !== 'phase-production-build') {
+  initOnce();
+}

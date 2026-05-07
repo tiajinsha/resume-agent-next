@@ -1,0 +1,45 @@
+# =====================================================================
+# Sift 思筛 — Docker Compose 部署配置
+# 用法:
+#   1. 复制 .env.local.example 为 .env.production,填入 DEEPSEEK_API_KEY
+#   2. docker compose up -d --build
+#   3. 访问 http://localhost:3000
+# =====================================================================
+
+services:
+  sift:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sift:latest
+    container_name: sift
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+
+    # 从 .env.production 读取 DEEPSEEK_API_KEY 等敏感配置
+    # 文件不进镜像(.dockerignore 已排除),只在 host 上,不会泄露
+    env_file:
+      - .env.production
+
+    # 镜像内默认值已设好,这里覆盖以确保数据写到 volume
+    environment:
+      DATABASE_URL: /var/lib/sift/data/sift.db
+      UPLOADS_DIR: /var/lib/sift/data/uploads
+      RUN_MIGRATIONS_ON_BOOT: "1"
+
+    volumes:
+      - sift-data:/var/lib/sift/data
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  # 命名 volume,docker compose down 不会删数据
+  # 完全清理:docker compose down -v
+  sift-data:
+    driver: local
