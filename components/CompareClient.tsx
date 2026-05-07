@@ -436,15 +436,19 @@ function CompareGrid({
   }
 
   // Skill analysis helpers
-  // 归一化技能字符串：小写 + 去除所有空白(含全角空格)和常见分隔符(. - /)
+  // 归一化技能字符串：小写 + 去除空白与分隔符(. - /) + 剥离尾部版本号
   // 让以下写法都能视为同一技能：
-  //   Node.js / nodejs / node js / node-js / NODE.JS  → "nodejs"
-  //   Vue.js / vuejs / vue js                          → "vuejs"
-  //   React Native / react-native / reactnative        → "reactnative"
-  //   CI/CD / ci-cd / cicd                             → "cicd"
-  // 保留 + # 等有语义的符号(C++、C#)
+  //   Node.js / nodejs / node js / node-js / NODE.JS / Node.js 20  → "nodejs"
+  //   Vue.js / vuejs / Vue 3 / Vue3 / vue.js 3.5                    → "vuejs"
+  //   React / React 18 / react18 / React 18.2                       → "react"
+  //   Python / Python 3 / python3.10                                → "python"
+  //   CI/CD / ci-cd / cicd                                          → "cicd"
+  // 保留 + # 等有语义的符号(C++、C#),不影响 2D / 3D 这类非"末尾纯数字"
   function normSkill(s: string): string {
-    return s.toLowerCase().replace(/[\s　.\-/]+/g, "");
+    return s
+      .toLowerCase()
+      .replace(/[\s　.\-/]+/g, "") // 去空白与常见分隔符
+      .replace(/\d+$/, "");         // 剥离纯数字结尾的版本号
   }
 
   const requiredSkills = new Set(
