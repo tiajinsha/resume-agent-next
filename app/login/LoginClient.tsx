@@ -71,7 +71,7 @@ export default function LoginClient({ initialMode, isDev }: { initialMode: Mode;
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
           <SiftLogo size={32} />
           <div style={{ fontSize: 13, color: 'var(--fg-subtle)', marginTop: 4 }}>
-            {mode === 'login' ? '登录以继续' : '创建管理员账号'}
+            {mode === 'login' ? '登录以继续' : '创建账号'}
           </div>
         </div>
 

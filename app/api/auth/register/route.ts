@@ -13,12 +13,6 @@ const Body = z.object({
 });
 
 export async function POST(req: Request) {
-  // 仅在没有任何用户时允许注册（首个用户 = 管理员）
-  const existing = db.select({ id: users.id }).from(users).limit(1).all();
-  if (existing.length > 0) {
-    return NextResponse.json({ error: 'registration_closed' }, { status: 403 });
-  }
-
   let body: unknown;
   try { body = await req.json(); } catch { return NextResponse.json({ error: 'invalid_json' }, { status: 400 }); }
 
