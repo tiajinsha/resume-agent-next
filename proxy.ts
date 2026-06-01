@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const PUBLIC_PREFIXES = ['/login', '/api/auth/'];
+const PUBLIC_PREFIXES = ['/login', '/api/auth/', '/api/health'];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  if (pathname === '/') return NextResponse.next();
   if (PUBLIC_PREFIXES.some(p => pathname.startsWith(p))) return NextResponse.next();
   if (pathname.startsWith('/_next') || pathname.match(/\.[a-z]+$/i)) return NextResponse.next();
 

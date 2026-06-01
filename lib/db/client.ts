@@ -6,6 +6,7 @@ import { mkdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 const dbUrl = process.env.DATABASE_URL ?? 'data/sift.db';
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
 declare global {
   var __sqlite: Database.Database | undefined;
@@ -13,6 +14,8 @@ declare global {
 }
 
 function createDb() {
+  // build 阶段用内存 DB，避免 27 个 worker 并发写同一文件导致 SQLITE_BUSY
+  if (isBuildPhase) return new Database(':memory:');
   if (dbUrl !== ':memory:') mkdirSync(dirname(dbUrl), { recursive: true });
   const sqlite = new Database(dbUrl);
   sqlite.pragma('journal_mode = WAL');
