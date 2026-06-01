@@ -32,7 +32,7 @@ export async function POST(req: Request, ctx: Ctx) {
     return NextResponse.json({ error: 'not_parsed' }, { status: 400 });
   }
 
-  const jd = db.select().from(jobDescriptions).where(eq(jobDescriptions.id, parsed.data.jdId)).get();
+  const jd = db.select().from(jobDescriptions).where(and(eq(jobDescriptions.id, parsed.data.jdId), eq(jobDescriptions.userId, user.id))).get();
   if (!jd) return NextResponse.json({ error: 'not_found', subject: 'jd' }, { status: 404 });
 
   let aiResult;
